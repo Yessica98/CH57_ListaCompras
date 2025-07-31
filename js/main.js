@@ -8,8 +8,15 @@ const alertValidacionesTexto = document.getElementById("alertValidacionesTexto")
 const tablaListaCompras = document.getElementById("tablaListaCompras");
 const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0); //Se utiliza el id de la tabla, para indentificar esta tabla en particular, sin importar cuantas tablas se tengan en el html
 
+const contadorProductos = document.getElementById("contadorProductos");
+const productosTotal = document.getElementById("productosTotal");
+const precioTotal = document.getElementById("precioTotal");
+
 
 let cont = 0;
+let totalProductos = 0;
+let costoTotal = 0;
+
 
 //Validacion de cantidad
 function validarCantidad() {
@@ -80,6 +87,15 @@ btnAgregar.addEventListener("click", function (event) {
             </tr>`;
 
     cuerpoTabla.insertAdjacentHTML("beforeend", row);
+
+    contadorProductos.innerText = cont;
+    totalProductos += Number(txtNumber.value);
+    productosTotal.innerText = totalProductos;
+    costoTotal += precio * Number(txtNumber.value);
+    //precioTotal.innerText = "$ " + costoTotal.toFixed(2), el toFixed, solo deja dos decimales, de acuerdo a lo que se encuentra en el parentesis
+    precioTotal.innerText = new Intl.NumberFormat("es-MX", 
+                    { style: "currency", currency: "MXN" }).format(costoTotal);
+
     txtName.value = ""; //para limpiar los campos, despues de que se agrego la informacion a la tabla
     txtNumber.value = "";
     txtName.focus(); //manda el cursor al campo de nombre, para evitar el click en el campo
