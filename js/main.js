@@ -20,11 +20,14 @@ function validarCantidad (){
         return false;
     } //Mayor que  0 
 
-
-
 return true;
 
 } //validarCantidad
+
+//Obtener precio
+function getPrecio(){
+    return Math.round(Math.random()*10000)/100;
+}//getPrecio
 
 btnAgregar.addEventListener("click", function(event){
 event.preventDefault();
