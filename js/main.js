@@ -17,6 +17,8 @@ let cont = 0;
 let totalProductos = 0;
 let costoTotal = 0;
 
+let datos = new Array(); //Datos de la tabla
+
 
 //Validacion de cantidad
 function validarCantidad() {
@@ -86,6 +88,18 @@ btnAgregar.addEventListener("click", function (event) {
             
             </tr>`;
 
+    //Objeto con los datos de la tabla
+    let elementoArreglo = {
+      "cont": cont,
+      "nombre":txtName.value,
+      "cantidad": txtNumber.value,
+      "precio": precio
+    };
+
+    //datos, es el nombre del arreglo 
+    datos.push(elementoArreglo);
+    localStorage.setItem("datos", JSON.stringify(datos));
+
     cuerpoTabla.insertAdjacentHTML("beforeend", row);
 
     contadorProductos.innerText = cont;
@@ -95,6 +109,16 @@ btnAgregar.addEventListener("click", function (event) {
     //precioTotal.innerText = "$ " + costoTotal.toFixed(2), el toFixed, solo deja dos decimales, de acuerdo a lo que se encuentra en el parentesis
     precioTotal.innerText = new Intl.NumberFormat("es-MX", 
                     { style: "currency", currency: "MXN" }).format(costoTotal);
+
+    //Objeto con json
+    let resumen = {
+      "con" : cont,
+      "totalProuctos":totalProductos,
+      "costoTotal":costoTotal.toFixed(2)
+    };
+    //JSON.stringify, convierte el objeto (resumen) en candena de texto (string)
+    //localStorage, almacena cadenas de texto
+    localStorage.setItem("resumen", JSON.stringify(resumen));
 
     txtName.value = ""; //para limpiar los campos, despues de que se agrego la informacion a la tabla
     txtNumber.value = "";
