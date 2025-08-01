@@ -42,6 +42,7 @@ function getPrecio() {
   return Math.round(Math.random() * 10000) / 100;
 } //getPrecio
 
+//BOTON DE AGREGAR
 btnAgregar.addEventListener("click", function (event) {
   event.preventDefault();
   let isValid = true; //bandera
@@ -90,10 +91,10 @@ btnAgregar.addEventListener("click", function (event) {
 
     //Objeto con los datos de la tabla
     let elementoArreglo = {
-      "cont": cont,
-      "nombre": txtName.value,
-      "cantidad": txtNumber.value,
-      "precio": precio
+      cont: cont,
+      nombre: txtName.value,
+      cantidad: txtNumber.value,
+      precio: precio,
     };
 
     //datos, es el nombre del arreglo
@@ -114,9 +115,9 @@ btnAgregar.addEventListener("click", function (event) {
 
     //Objeto con json
     let resumen = {
-      "cont": cont,
-      "totalProductos": totalProductos,
-      "costoTotal": costoTotal,
+      cont: cont,
+      totalProductos: totalProductos,
+      costoTotal: costoTotal,
     };
     //JSON.stringify, convierte el objeto (resumen) en candena de texto (string)
     //localStorage, almacena cadenas de texto
@@ -128,12 +129,14 @@ btnAgregar.addEventListener("click", function (event) {
   }
 }); //btnAgregar "click"
 
+//WINDOW LOAD
 window.addEventListener("load", function (event) {
   event.preventDefault();
 
+  //A qui muestra la informacion de la tabla
   if (this.localStorage.getItem("datos") != null) {
     datos = JSON.parse(this.localStorage.getItem("datos"));
-    datos.forEach( (dato) =>{
+    datos.forEach((dato) => {
       let row = `<tr>
                     <td>${dato.cont}</td>
                     <td>${dato.nombre}</td>
@@ -141,10 +144,11 @@ window.addEventListener("load", function (event) {
                     <td>${dato.precio}</td>
             
             </tr>`;
-    cuerpoTabla.insertAdjacentHTML("beforeend", row);
-    })
+      cuerpoTabla.insertAdjacentHTML("beforeend", row);
+    });
   }
 
+  //Aqui muestra la informacion de resumen
   if (this.localStorage.getItem("resumen") != null) {
     let resumen = JSON.parse(this.localStorage.getItem("resumen"));
     costoTotal = resumen.costoTotal;
@@ -152,6 +156,7 @@ window.addEventListener("load", function (event) {
     cont = resumen.cont;
   }
 
+  //A qui agrega datos, aun que no se tenga informacion, ya que las variables fueron inicializadas con 0, y muestra cero
   contadorProductos.innerText = cont;
   productosTotal.innerText = totalProductos;
   precioTotal.innerText = new Intl.NumberFormat("es-MX", {
@@ -159,3 +164,50 @@ window.addEventListener("load", function (event) {
     currency: "MXN",
   }).format(costoTotal);
 }); //window load
+
+/**
+ * Limpiar todo
+ * 1. Eliminar el localStorage
+ * 2. Limpiar la tabla
+ * 3. Limpiar los campos
+ * 4.
+ */
+
+//BOTON DE LIMPIAR TODO
+btnClear.addEventListener("click", function (event) {
+  event.preventDefault();
+
+  //1. Eliminar el localStorage
+  localStorage.removeItem("datos");
+  localStorage.removeItem("resume");
+
+  //2. Limpiar la tabla
+  cuerpoTabla.innerHTML = "";
+
+  //3. Limpiar los campos
+  txtName.value = ""; //para limpiar los campos, despues de que se agrego la informacion a la tabla
+  txtNumber.value = "";
+  txtName.focus(); //manda el cursor al campo de nombre, para evitar el click en el campo
+
+  //4. Limpiar el borde los campos
+  txtName.style.border = "";
+  txtNumber.style.border = "";
+
+  //5. Limpiar los alerts
+  alertValidacionesTexto.innerHTML = "";
+  alertValidaciones.style.display = "none";
+
+  //6. Limpiar el resumen
+  cont = 0;
+  totalProductos = 0;
+  costoTotal = 0;
+  contadorProductos.innerText = cont;
+  productosTotal.innerText = totalProductos;
+  precioTotal.innerText = new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  }).format(costoTotal);
+  datos = new Array();
+
+
+}); //btnLimpiarTodo
