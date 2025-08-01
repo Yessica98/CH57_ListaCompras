@@ -4,7 +4,9 @@ const btnAgregar = document.getElementById("btnAgregar");
 const btnClear = document.getElementById("btnClear");
 
 const alertValidaciones = document.getElementById("alertValidaciones");
-const alertValidacionesTexto = document.getElementById("alertValidacionesTexto");
+const alertValidacionesTexto = document.getElementById(
+  "alertValidacionesTexto"
+);
 const tablaListaCompras = document.getElementById("tablaListaCompras");
 const cuerpoTabla = tablaListaCompras.getElementsByTagName("tbody").item(0); //Se utiliza el id de la tabla, para indentificar esta tabla en particular, sin importar cuantas tablas se tengan en el html
 
@@ -12,13 +14,11 @@ const contadorProductos = document.getElementById("contadorProductos");
 const productosTotal = document.getElementById("productosTotal");
 const precioTotal = document.getElementById("precioTotal");
 
-
 let cont = 0;
 let totalProductos = 0;
 let costoTotal = 0;
 
 let datos = new Array(); //Datos de la tabla
-
 
 //Validacion de cantidad
 function validarCantidad() {
@@ -77,7 +77,7 @@ btnAgregar.addEventListener("click", function (event) {
   } //validar cantidad
 
   //Agregando los elementos a la tabla
-  if(isValid){
+  if (isValid) {
     cont++;
     let precio = getPrecio();
     let row = `<tr>
@@ -91,12 +91,12 @@ btnAgregar.addEventListener("click", function (event) {
     //Objeto con los datos de la tabla
     let elementoArreglo = {
       "cont": cont,
-      "nombre":txtName.value,
+      "nombre": txtName.value,
       "cantidad": txtNumber.value,
       "precio": precio
     };
 
-    //datos, es el nombre del arreglo 
+    //datos, es el nombre del arreglo
     datos.push(elementoArreglo);
     localStorage.setItem("datos", JSON.stringify(datos));
 
@@ -107,14 +107,16 @@ btnAgregar.addEventListener("click", function (event) {
     productosTotal.innerText = totalProductos;
     costoTotal += precio * Number(txtNumber.value);
     //precioTotal.innerText = "$ " + costoTotal.toFixed(2), el toFixed, solo deja dos decimales, de acuerdo a lo que se encuentra en el parentesis
-    precioTotal.innerText = new Intl.NumberFormat("es-MX", 
-                    { style: "currency", currency: "MXN" }).format(costoTotal);
+    precioTotal.innerText = new Intl.NumberFormat("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    }).format(costoTotal);
 
     //Objeto con json
     let resumen = {
-      "con" : cont,
-      "totalProuctos":totalProductos,
-      "costoTotal":costoTotal.toFixed(2)
+      "cont": cont,
+      "totalProductos": totalProductos,
+      "costoTotal": costoTotal,
     };
     //JSON.stringify, convierte el objeto (resumen) en candena de texto (string)
     //localStorage, almacena cadenas de texto
@@ -124,6 +126,36 @@ btnAgregar.addEventListener("click", function (event) {
     txtNumber.value = "";
     txtName.focus(); //manda el cursor al campo de nombre, para evitar el click en el campo
   }
-
-
 }); //btnAgregar "click"
+
+window.addEventListener("load", function (event) {
+  event.preventDefault();
+
+  if (this.localStorage.getItem("datos") != null) {
+    datos = JSON.parse(this.localStorage.getItem("datos"));
+    datos.forEach( (dato) =>{
+      let row = `<tr>
+                    <td>${dato.cont}</td>
+                    <td>${dato.nombre}</td>
+                    <td>${dato.cantidad}</td>
+                    <td>${dato.precio}</td>
+            
+            </tr>`;
+    cuerpoTabla.insertAdjacentHTML("beforeend", row);
+    })
+  }
+
+  if (this.localStorage.getItem("resumen") != null) {
+    let resumen = JSON.parse(this.localStorage.getItem("resumen"));
+    costoTotal = resumen.costoTotal;
+    totalProductos = resumen.totalProductos;
+    cont = resumen.cont;
+  }
+
+  contadorProductos.innerText = cont;
+  productosTotal.innerText = totalProductos;
+  precioTotal.innerText = new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  }).format(costoTotal);
+}); //window load
