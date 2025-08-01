@@ -91,10 +91,10 @@ btnAgregar.addEventListener("click", function (event) {
 
     //Objeto con los datos de la tabla
     let elementoArreglo = {
-      cont: cont,
-      nombre: txtName.value,
-      cantidad: txtNumber.value,
-      precio: precio,
+      "cont": cont,
+      "nombre": txtName.value,
+      "cantidad": txtNumber.value,
+      "precio": precio
     };
 
     //datos, es el nombre del arreglo
@@ -115,9 +115,9 @@ btnAgregar.addEventListener("click", function (event) {
 
     //Objeto con json
     let resumen = {
-      cont: cont,
-      totalProductos: totalProductos,
-      costoTotal: costoTotal,
+      "cont": cont,
+      "totalProductos": totalProductos,
+      "costoTotal": costoTotal
     };
     //JSON.stringify, convierte el objeto (resumen) en candena de texto (string)
     //localStorage, almacena cadenas de texto
